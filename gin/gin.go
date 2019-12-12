@@ -9,9 +9,9 @@ type API struct {
 	EventService sbapi.EventService
 }
 
-func (a *API) Start (es sbapi.EventService, host string, port string) {
+func (a *API) Start (host string, port string) {
 	// Start, but attach the EventService first.
-	a.EventService = es
+	//a.EventService = es
 
 	// Now load some defaults.
 	r := gin.Default()
@@ -27,6 +27,6 @@ func (a *API) Start (es sbapi.EventService, host string, port string) {
 		// Save the event
 		// HOW?
 		// That's not GIN's business
-		a.EventService.Save(&evt)
+	//	a.EventService.Save(&evt)
 	})
 }
