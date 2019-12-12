@@ -1,6 +1,9 @@
 package gin
 
 import (
+  "log"
+  "strconv"
+
 	"github.com/gin-gonic/gin"
 	sbapi "sbapi"
 )
@@ -10,23 +13,39 @@ type API struct {
 }
 
 func (a *API) Start (host string, port string) {
-	// Start, but attach the EventService first.
-	//a.EventService = es
-
 	// Now load some defaults.
 	r := gin.Default()
 
-	// What should the API DO, when localhost:3300/saveEvent is called.
-	r.POST("/saveEvent", func(c *gin.Context) {
+	// What should the API DO, when POST localhost:3300/event is called?
+	r.POST("/event", func(c *gin.Context) {
 		evt := sbapi.Event{}
 		err := c.BindJSON(&evt)
 		if err != nil {
-			panic("HELP, I COULD NOT BIND THE RECEIVED DATA TO AN EVENT: " + err.Error())
+			log.Printf("HELP, I COULD NOT BIND THE RECEIVED DATA TO AN EVENT: %+v", err)
 		}
-
-		// Save the event
-		// HOW?
-		// That's not GIN's business
-	//	a.EventService.Save(&evt)
 	})
+
+  // What should the API DO, when GET localhost:3300/event is called
+  r.GET("/event/:id", func(c *gin.Context) {
+    id := c.Param("id")
+    
+    if id == "" {
+      log.Printf("empty ID provided when trying to get event")
+      c.AbortWithStatus(400)
+      return
+    }
+
+    idNumber, err := strconv.Atoi(id)
+
+    if err != nil {
+      log.Printf("non-numerical ID provided when trying to get event")
+      c.AbortWithStatus(400)
+      return
+    }
+
+    evt := a.EventService.Get(strconv.Itoa(idNumber))
+    c.JSON(200, evt)
+  })
+
+  r.Run(host + ":" + port)
 }
