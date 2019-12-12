@@ -1,6 +1,6 @@
 package main
 
-import "soundboard-api/gin"
+import "sbapi/gin"
 
 func main() {
 	api := gin.API{}

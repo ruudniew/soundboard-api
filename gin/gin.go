@@ -2,7 +2,7 @@ package gin
 
 import (
 	"github.com/gin-gonic/gin"
-	sbapi "soundboard-api"
+	sbapi "sbapi"
 )
 
 type API struct {
