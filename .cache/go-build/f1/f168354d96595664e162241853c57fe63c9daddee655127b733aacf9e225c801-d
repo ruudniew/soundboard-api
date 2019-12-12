@@ -1,0 +1,5 @@
+./sse-decoder.go
+./sse-encoder.go
+./writer.go
+./sse-decoder_test.go
+./sse_test.go
