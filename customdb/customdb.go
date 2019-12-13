@@ -2,11 +2,13 @@ package customdb
 
 import (
 	"encoding/json"
+	"github.com/google/uuid"
 	"io/ioutil"
 	"log"
 	"os"
 	"sbapi"
 	"sort"
+	"strconv"
 )
 
 type CustomDB struct{}
@@ -85,6 +87,21 @@ func (cdb *CustomDB) GetList(time string) []*sbapi.Event {
 	return includedEvents
 }
 
-func (cdb *CustomDB) Save(event *sbapi.Event) (bool, string) {
-	return false, ""
+func (cdb *CustomDB) Save(event *sbapi.Event) (id string, err error) {
+	jsonEvent, err := json.Marshal(event)
+
+	if err != nil {
+		return "", err
+	}
+
+	newID, _ := uuid.NewRandom()
+	idString := strconv.Itoa(int(newID.ID()))
+
+	err = ioutil.WriteFile(idString+".json", jsonEvent, 765)
+
+	if err != nil {
+		return "", err
+	}
+
+	return idString, nil
 }

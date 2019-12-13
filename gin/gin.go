@@ -13,9 +13,12 @@ type API struct {
 	EventService sbapi.EventService
 }
 
-func (a *API) Start(host string, port string) {
+func (a *API) Start(host string, port string, corsHosts []string) {
 	// Now load some defaults.
 	r := gin.Default()
+
+	// CORS middlware for gin.
+	r.Use()
 
 	// What should the API DO, when POST localhost:3300/event is called?
 	r.POST("/event", func(c *gin.Context) {

@@ -11,5 +11,5 @@ func main() {
 	api := gin.API{}
 	api.EventService = &customDB
 
-	api.Start("", "3300")
+	api.Start("localhost", "3300", []string{"localhost:3000"})
 }

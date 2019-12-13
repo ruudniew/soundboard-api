@@ -1,7 +1,7 @@
 package sbapi
 
 type API interface {
-	Start(host string, port string)
+	Start(host string, port string, corsHosts []string)
 }
 
 type Event struct {
@@ -19,5 +19,5 @@ type EventSource struct {
 type EventService interface {
 	Get(id string) *Event
 	GetList(time string) []*Event
-	Save(evt *Event) (ok bool, id string)
+	Save(evt *Event) (id string, err error)
 }
