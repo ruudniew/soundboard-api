@@ -9,6 +9,7 @@ import (
 	"sbapi"
 	"sort"
 	"strconv"
+	"time"
 )
 
 type CustomDB struct{}
@@ -88,17 +89,17 @@ func (cdb *CustomDB) GetList(time string) []*sbapi.Event {
 }
 
 func (cdb *CustomDB) Save(event *sbapi.Event) (id string, err error) {
-	jsonEvent, err := json.Marshal(event)
+	newID, _ := uuid.NewRandom()
+	idString := strconv.Itoa(int(newID.ID()))
+	event.ID = idString
+	event.CreatedAt = time.Now().Local().String()
 
+	jsonEvent, err := json.Marshal(event)
 	if err != nil {
 		return "", err
 	}
 
-	newID, _ := uuid.NewRandom()
-	idString := strconv.Itoa(int(newID.ID()))
-
-	err = ioutil.WriteFile(idString+".json", jsonEvent, 765)
-
+	err = ioutil.WriteFile("./events/"+idString+".json", jsonEvent, 0644)
 	if err != nil {
 		return "", err
 	}

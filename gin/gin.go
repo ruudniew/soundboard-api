@@ -3,7 +3,9 @@ package gin
 import (
 	"log"
 	"strconv"
+	"time"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
 	sbapi "sbapi"
@@ -18,15 +20,36 @@ func (a *API) Start(host string, port string, corsHosts []string) {
 	r := gin.Default()
 
 	// CORS middlware for gin.
-	r.Use()
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     corsHosts,
+		AllowMethods:     []string{"PUT", "POST", "GET", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	// What should the API DO, when POST localhost:3300/event is called?
 	r.POST("/event", func(c *gin.Context) {
 		evt := sbapi.Event{}
+
 		err := c.BindJSON(&evt)
 		if err != nil {
 			log.Printf("HELP, I COULD NOT BIND THE RECEIVED DATA TO AN EVENT: %+v", err)
+			c.AbortWithStatus(400) // bad request
+			return
 		}
+		log.Printf("evt received: %+v", evt.Source)
+
+		id, err := a.EventService.Save(&evt)
+
+		if err != nil {
+			log.Printf("HELP, I COULD NOT SAVE THIS DATA TO AN EVENT: %+v", err)
+			c.AbortWithStatus(400)
+			return
+		}
+
+		c.JSON(200, id)
 	})
 
 	// What should the API DO, when GET localhost:3300/event/:id is called

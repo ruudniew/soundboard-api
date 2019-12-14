@@ -5,10 +5,11 @@ type API interface {
 }
 
 type Event struct {
-	ID        string       `json:"id"`
-	CreatedAt string       `json:"created_at"`
-	Title     string       `json:"title"` // Example: slow-clap
-	Source    *EventSource `json:"source"`
+	ID            string       `json:"id"`
+	CreatedAt     string       `json:"created_at"`
+	Title         string       `json:"title"` // Example: slow-clap
+	InternalTitle string       `json:"internal_title"`
+	Source        *EventSource `json:"source"`
 }
 
 type EventSource struct {
