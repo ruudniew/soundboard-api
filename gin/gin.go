@@ -17,7 +17,7 @@ type API struct {
 
 func (a *API) Start(host string, port string, corsHosts []string) {
 	// Now load some defaults.
-	r := gin.Default()
+	r := gin.New()
 
 	// CORS middlware for gin.
 	r.Use(cors.New(cors.Config{
