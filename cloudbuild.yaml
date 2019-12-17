@@ -24,7 +24,7 @@ steps:
     args:
       - apply
       - '-f'
-      - './k8s/ruudniew-sbapi-deployment.yaml'
+      - './k8s/sbapi-deployment.yaml'
       - '--namespace'
       - dutchdelhicacy
     env:
