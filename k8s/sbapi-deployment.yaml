@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: ruudniew-sbapi
+  name: ruudniew-sbapi
+  namespace: dutchdelhicacy
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ruudniew-sbapi
+    spec:
+      containers:
+        - image: eu.gcr.io/genuine-display-244917/ruudniew-sbapi:master
+          name: ruudniew-sbapi
+          ports:
+            - containerPort: 3300
+          resources: {}
+          imagePullPolicy: Always
+      restartPolicy: Always

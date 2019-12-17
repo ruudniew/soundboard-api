@@ -15,7 +15,7 @@ type API struct {
 	EventService sbapi.EventService
 }
 
-func (a *API) Start(host string, port string, corsHosts []string) {
+func (a *API) Start(host string, port string, corsHosts []string, pass string) {
 	// Now load some defaults.
 	r := gin.Default()
 
@@ -30,7 +30,7 @@ func (a *API) Start(host string, port string, corsHosts []string) {
 	}))
 
 	// What should the API DO, when POST localhost:3300/event is called?
-	r.POST("/event", func(c *gin.Context) {
+	r.POST("/"+pass+"/event", func(c *gin.Context) {
 		evt := sbapi.Event{}
 
 		err := c.BindJSON(&evt)
@@ -53,7 +53,7 @@ func (a *API) Start(host string, port string, corsHosts []string) {
 	})
 
 	// What should the API DO, when GET localhost:3300/event/:id is called
-	r.GET("/event/:id", func(c *gin.Context) {
+	r.GET("/"+pass+"/event/:id", func(c *gin.Context) {
 		id := c.Param("id")
 
 		if id == "" {
@@ -74,7 +74,7 @@ func (a *API) Start(host string, port string, corsHosts []string) {
 		c.JSON(200, evt)
 	})
 
-	r.GET("/events/:time", func(c *gin.Context) {
+	r.GET("/"+pass+"/events/:time", func(c *gin.Context) {
 		t := c.Param("time")
 
 		if t == "" {

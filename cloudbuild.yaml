@@ -1,0 +1,39 @@
+steps:
+  # Build the container image.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Build
+    args:
+      - 'build'
+      - '-t'
+      - 'eu.gcr.io/$PROJECT_ID/ruudniew-sbapi:$SHORT_SHA'
+      - '.'
+
+
+  # Push the image to Container Registry
+  # The PROJECT_ID and SHORT_SHA variables are automatically replaced by Cloud Build.
+  - name: 'gcr.io/cloud-builders/docker'
+    id: Push
+    args:
+      - 'push'
+      - 'eu.gcr.io/$PROJECT_ID/ruudniew-sbapi:$SHORT_SHA'
+
+
+  # Deploy the image
+  # Namespace, if not default, has to be specified.
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args:
+      - apply
+      - '-f'
+      - './k8s/ruudniew-sbapi-deployment.yaml'
+      - '--namespace'
+      - dutchdelhicacy
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west4-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=factory'
+
+  # Namespace, if not default, has to be specified.
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deployment/ruudniew-sbapi', 'ruudniew-sbapi=eu.gcr.io/$PROJECT_ID/ruudniew-sbapi:$SHORT_SHA', '--namespace', 'dutchdelhicacy']
+    env:
+      - 'CLOUDSDK_COMPUTE_ZONE=europe-west4-a'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=factory'

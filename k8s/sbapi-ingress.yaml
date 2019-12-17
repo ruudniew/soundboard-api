@@ -1,0 +1,16 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: traefik
+  name: ruudniew-sbapi
+  namespace: dutchdelhicacy
+spec:
+  rules:
+    - host: soundboard.ruudniew.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: "ruudniew-sbapi"
+              servicePort: "api"

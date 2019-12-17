@@ -1,7 +1,7 @@
 package sbapi
 
 type API interface {
-	Start(host string, port string, corsHosts []string)
+	Start(host string, port string, corsHosts []string, pass string)
 }
 
 type Event struct {
